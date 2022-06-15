@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  labels:
+    app: imagem-cloud
+spec:
+  ports:
+    - port: 80
+      targetPort: 8000
+      protocol: TCP
+  selector:
+    app: imagem-cloud
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imagem-cloud
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: imagem-cloud
+  template:
+    metadata:
+      labels:
+        app: imagem-cloud
+    spec:
+      containers:
+      - name: imagem-cloud
+        image: lucacm/imagem-projeto-cloud
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
